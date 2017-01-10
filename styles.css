@@ -1,0 +1,25 @@
+html, body {
+  box-sizing: border-box;
+  font-size: 10px;
+  margin:0;
+  padding:0;
+  background:#ccc;
+  width: 100vw;
+  height: 100vh;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.photo{
+
+}
+
+.display{
+
+}
+
+.thumbnails{
+
+}
