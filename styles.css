@@ -6,20 +6,65 @@ html, body {
   background:#ccc;
   width: 100vw;
   height: 100vh;
+  
+}
+
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-flow: column;
 }
 
 *, *:before, *:after {
   box-sizing: inherit;
 }
 
-.photo{
+.content{
+  flex:1 1;
+  max-width: 120rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+}
 
+.photo{
+  position: absolute;
+  visibility: hidden;
+  width: 100%;
+  height: 100%;
+  top:0;
+  left:0;
+  z-index: -1;
 }
 
 .display{
-
+  flex: 1 1 0;
+  width: 100vw;
+  max-width: 100%;
 }
 
-.thumbnails{
+.controls{
+  display: flex;
+  background: black;
+  padding: 1rem;
+  width: 100vw;
+  max-width: 100%;
+  justify-content: space-around;
+}
 
+.controls button{
+  border-radius: 50%;
+  width: 10rem;
+  height: 10rem;
+  border: none;
+}
+
+.thumbnail{
+  border-radius: 50%;
+  width: 10rem;
+  height: 10rem;
+  background: black;
 }
