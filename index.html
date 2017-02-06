@@ -3,22 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Insta worker</title>
+    <title>Sensors worker</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
     <section class="content">
-        <canvas class="photo"></canvas>
-        <video class="display"></video>
-        
-        <section class="controls">
-            <div class="thumbnail"></div>
-            <button></button>
-            <div class="thumbnail"></div>
-        </section>
+        <button class="heart">
+            <svg>
+             <use xlink:href="alive.svg#bounce-line"></use>
+            </svg>
+        </button>
     </section>
+
     <script src="scripts.js"></script>
+    <script src="heartMonitor.js"></script>
 </body>
 
 </html>

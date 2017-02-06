@@ -1,20 +1,21 @@
+:root{
+  --heart-rate-color: #49D85D;
+  --heart-rate-bg:#0B1D0A;
+  --default-body-color: #ccc;
+}
+
 html, body {
   box-sizing: border-box;
   font-size: 10px;
   margin:0;
   padding:0;
-  background:#ccc;
+  background:var(--default-body-color);
   width: 100vw;
   height: 100vh;
-  
 }
 
 body{
   display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  flex-flow: column;
 }
 
 *, *:before, *:after {
@@ -22,49 +23,38 @@ body{
 }
 
 .content{
-  flex:1 1;
-  max-width: 120rem;
+  flex:1;
   overflow: hidden;
-  position: relative;
   display: flex;
-  flex-flow: column;
+  flex-flow: row wrap;
 }
 
-.photo{
+.heart{
+    background-color:var(--heart-rate-bg);
+    color: var(--heart-rate-color);
+    flex: 1;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 0;
+    border: none;
+}
+
+.heart svg{
   position: absolute;
-  visibility: hidden;
+  left: 0;
   width: 100%;
   height: 100%;
-  top:0;
-  left:0;
-  z-index: -1;
 }
 
-.display{
-  flex: 1 1 0;
-  width: 100vw;
-  max-width: 100%;
+.heart canvas{
+  flex: 1;
+  width: 100%;
 }
 
-.controls{
-  display: flex;
-  background: black;
-  padding: 1rem;
-  width: 100vw;
-  max-width: 100%;
-  justify-content: space-around;
-}
-
-.controls button{
-  border-radius: 50%;
-  width: 10rem;
-  height: 10rem;
-  border: none;
-}
-
-.thumbnail{
-  border-radius: 50%;
-  width: 10rem;
-  height: 10rem;
-  background: black;
+.heart.animate{
+  stroke-dasharray: 200 1010;
+  stroke-dashoffset: 200;
 }
