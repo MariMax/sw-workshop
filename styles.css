@@ -1,7 +1,8 @@
 :root{
-  --heart-rate-color: #49D85D;
   --heart-rate-bg:#0B1D0A;
   --default-body-color: #ccc;
+  --heart-rate-hue: 110;
+  --heart-rate-font-size: 25rem;
 }
 
 html, body {
@@ -31,12 +32,12 @@ body{
 
 .heart{
     background-color:var(--heart-rate-bg);
-    color: var(--heart-rate-color);
+    color: hsl(var(--heart-rate-hue), 68%, 52%);
     flex: 1;
     position: relative;
     box-sizing: border-box;
     display: flex;
-    align-items: stretch;
+    align-items: flex-end;
     flex-direction: column;
     padding: 0;
     border: none;
@@ -57,4 +58,33 @@ body{
 .heart.animate{
   stroke-dasharray: 200 1010;
   stroke-dashoffset: 200;
+}
+
+.heart>div{
+  display: flex;
+  align-items: baseline;
+  font-family: monospace;
+  padding: 0 2rem;
+}
+
+.heart .value{
+  color: hsl(var(--heart-rate-hue), 68%, 52%);
+
+  font-size: var(--heart-rate-font-size);
+  
+}
+
+.bpm{
+  display: none;
+}
+
+.heart.animate .bpm{
+  display: inline-block;
+  font-size: calc(var(--heart-rate-font-size)/2);
+}
+
+@media (orientation: landscape){
+  :root{
+    --heart-rate-font-size:15rem;
+  }
 }

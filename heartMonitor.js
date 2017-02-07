@@ -1,5 +1,6 @@
 (function () {
   const heartMonitor = document.querySelector('.heart');
+  const heartRateValue = document.querySelector('.value');
   let animation;
   let heatMonitorDevice;
   let heartMonitorCharacteristic;
@@ -11,24 +12,25 @@
     iterations: 1,
     easing: 'linear',
     duration: 1000,
+    rate: 60,
   };
   const keyframes = [
     {strokeDashoffset:200, offset: 0},
     {strokeDashoffset:-1006, offset: 1},
   ];
-  let valuesQueue = [];
   
-  const animateBeat = () => {
-    timing.duration = valuesQueue.pop() || timing.duration;
-    animation = heartMonitor.animate(keyframes, timing);
-    animation.onfinish = () => animateBeat();
+  const animateBeat = (rate) => {
+    timing.duration = (rate && 60/rate*1000) || timing.duration;
+    timing.rate = rate || timing.rate;
+    heartRateValue.innerText = timing.rate;
+    heartMonitor.style.setProperty('--heart-rate-hue', 170-timing.rate>0?170-timing.rate:0);
+    animation = animation || heartMonitor.animate(keyframes, timing);
+    animation.onfinish = () => {animation = null; animateBeat();};
   }
 
   const displayHeartRate = (rate) => {
-    valuesQueue.push(rate ? 60/rate * 1000: 1000);
-    console.log(valuesQueue);
     heartMonitor.classList.add('animate');
-    !animation && animateBeat();
+    animateBeat(rate);
   }
 
   const handleNotifications = (event) => {
@@ -50,6 +52,7 @@
 
   const onDisconnected = async () => {
     heartMonitor.classList.remove('animate');
+    heartRateValue.innerText = '---';
     animation && animation.cancel();
     animation = null;
     try {
