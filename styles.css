@@ -30,6 +30,11 @@ body{
   flex-flow: row wrap;
 }
 
+.content heart-monitor{
+  flex:1;
+  display:flex;
+}
+
 .heart{
     background-color:var(--heart-rate-bg);
     color: hsl(var(--heart-rate-hue), 68%, 52%);
@@ -56,6 +61,7 @@ body{
 }
 
 .heart.animate{
+  -webkit-appearance: non;
   stroke-dasharray: 200 1010;
   stroke-dashoffset: 200;
 }
