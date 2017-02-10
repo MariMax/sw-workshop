@@ -3,6 +3,9 @@
   --default-body-color: #ccc;
   --heart-rate-hue: 110;
   --heart-rate-font-size: 25rem;
+  --heart-icon-color: red;
+  --heart-top-position: -5rem;
+  --heart-size: 7rem;
 }
 
 html, body {
@@ -48,20 +51,15 @@ body{
     border: none;
 }
 
-.heart svg{
+.heart>svg{
   position: absolute;
   left: 0;
   width: 100%;
   height: 100%;
 }
 
-.heart canvas{
-  flex: 1;
-  width: 100%;
-}
-
 .heart.animate{
-  -webkit-appearance: non;
+  -webkit-appearance: none;
   stroke-dasharray: 200 1010;
   stroke-dashoffset: 200;
 }
@@ -80,17 +78,29 @@ body{
   
 }
 
-.bpm{
+.value-name{
   display: none;
+  position: relative;
 }
 
-.heart.animate .bpm{
-  display: inline-block;
+.value-name svg{
+  width: var(--heart-size);
+  height: var(--heart-size);
+  position: absolute;
+  top: var(--heart-top-position);
+  color:var(--heart-icon-color);
+}
+
+.heart.animate .value-name{
+  display: flex;
+  flex-direction: column;
   font-size: calc(var(--heart-rate-font-size)/2);
 }
 
 @media (orientation: landscape){
   :root{
     --heart-rate-font-size:15rem;
+    --heart-top-position: -2.5rem;
+    --heart-size: 3rem;
   }
 }
