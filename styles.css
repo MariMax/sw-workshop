@@ -6,6 +6,7 @@
   --heart-icon-color: red;
   --heart-top-position: -5rem;
   --heart-size: 7rem;
+  --animation-duration: 1000;
 }
 
 html, body {
@@ -73,9 +74,7 @@ body{
 
 .heart .value{
   color: hsl(var(--heart-rate-hue), 68%, 52%);
-
   font-size: var(--heart-rate-font-size);
-  
 }
 
 .value-name{
@@ -97,10 +96,35 @@ body{
   font-size: calc(var(--heart-rate-font-size)/2);
 }
 
+.bounce-line-animation{
+  animation: bounce-line calc(var(--animation-duration)*1ms) linear;
+}
+
+.heart-beat-animation{
+  animation: heart-beat calc(var(--animation-duration)*1ms) linear;
+}
+
 @media (orientation: landscape){
   :root{
     --heart-rate-font-size:15rem;
     --heart-top-position: -2.5rem;
     --heart-size: 3rem;
   }
+}
+
+@keyframes bounce-line {
+  0% {
+    stroke-dashoffset: 200;
+  }
+  100% {
+    stroke-dashoffset: -1006;
+  }
+}
+
+@keyframes heart-beat {
+  25% {transform:scale(1)}
+  35% {transform:scale(1.3)}
+  40% {transform:scale(1)}
+  50% {transform:scale(1.5)}
+  80% {transform:scale(1)}
 }

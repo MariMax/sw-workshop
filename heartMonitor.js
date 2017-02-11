@@ -6,6 +6,8 @@
       this.onDisconnected = this.onDisconnected.bind(this);
       this.onClickHandler = this.onClickHandler.bind(this);
       this.stopAnimation = this.stopAnimation.bind(this);
+      this.startAnimation = this.startAnimation.bind(this);
+      this.animationIteration = this.animationIteration.bind(this);
       const template = `
         <button class="heart">
             <div class="vlaue-group">
@@ -33,31 +35,19 @@
       this.heartMonitor = this.querySelector('.heart');
       this.heartRateValue = this.querySelector('.value');
       this.heartIcon = this.querySelector('.value-name  svg');
-      this.animation = null;
       this.heatMonitorDevice = null;
       this.heartMonitorCharacteristic = null;
       this.initialization = false;
       this.serviceUuid = 'heart_rate';
       this.characteristicUuid = 'heart_rate_measurement';
+      this.iteration = 0;
       this.timing = {
-        iterations: 1,
-        easing: 'linear',
         duration: 1000,
         rate: 60,
       };
-      this.keyframes = [
-        { strokeDashoffset: 200, offset: 0 },
-        { strokeDashoffset: -1006, offset: 1 },
-      ];
-      this.heartbeat = [
-        {transform:'scale(1)', offset:0},
-        {transform:'scale(1.3)', offset:.35},
-        {transform:'scale(1.1)', offset:.4},
-        {transform:'scale(1.5)', offset:.5},
-        {transform:'scale(1)', offset:1},
-      ]
 
       this.heartMonitor.addEventListener('click', this.onClickHandler);
+      this.heartIcon.addEventListener('animationend', this.animationIteration);
     }
 
     onClickHandler() {
@@ -66,32 +56,39 @@
       return this.subscribeToHRUpdates();
     }
 
-    animateBeat() {
-      if (this.animation) return;
-      this.animation = this.heartMonitor.animate(this.keyframes, this.timing);
-      this.heartbeatA = this.heartIcon.animate(this.heartbeat, this.timing);
-      this.animation.onfinish = this.stopAnimation;
+    startAnimation() {
+      if (this.heartMonitor.classList.contains('bounce-line-animation')) return;
+      this.heartMonitor.style.setProperty('--animation-duration', this.timing.duration);
+      this.heartMonitor.style.setProperty('--heart-rate-hue', 170 - this.timing.rate > 0 ? 170 - this.timing.rate : 0);
+      this.heartMonitor.classList.add('bounce-line-animation');
+      this.heartIcon.classList.add('heart-beat-animation');
+      this.heartMonitor.classList.add('animate');
+    }
+
+    animationIteration() {
+      this.heartMonitor.classList.remove('bounce-line-animation');
+      this.heartIcon.classList.remove('heart-beat-animation');
+      this.heartMonitor.style.setProperty('--animation-duration', this.timing.duration);
+      this.heartMonitor.style.setProperty('--heart-rate-hue', 170 - this.timing.rate > 0 ? 170 - this.timing.rate : 0);
+      setTimeout(this.startAnimation);
     }
 
     stopAnimation() {
-      this.animation.onfinish = null;
-      this.animation = null;
-      this.heartbeatA = null;
-      this.animateBeat();
+      this.heartMonitor.classList.remove('bounce-line-animation');
+      this.heartIcon.classList.remove('heart-beat-animation');
+      this.heartMonitor.classList.remove('animate');
+      this.heartRateValue.innerText = '---';
     }
 
     displayHeartRate(rate) {
       this.timing.duration = (rate && 60 / rate * 1000) || this.timing.duration;
       this.timing.rate = rate || this.timing.rate;
       this.heartRateValue.innerText = this.timing.rate;
-      this.heartMonitor.style.setProperty('--heart-rate-hue', 170 - this.timing.rate > 0 ? 170 - this.timing.rate : 0);
 
-      this.heartMonitor.classList.add('animate');
-      this.animateBeat();
+      return this.startAnimation();
     }
 
     handleNotifications(event) {
-      // if (Math.random()>.3) return;
       const value = event.target.value;
       const a = [];
       for (let i = 0; i < value.byteLength; i++) {
@@ -108,11 +105,7 @@
     }
 
     async onDisconnected() {
-      this.heartMonitor.classList.remove('animate');
-      this.heartRateValue.innerText = '---';
-      this.animation && this.animation.cancel();
-      this.heartbeatA && this.heartbeatA.cancel();
-      this.animation = null;
+      this.stopAnimation();
       try {
         this.heartMonitorCharacteristic = await root.utils.exponentialBackoff(3, 2, root.utils.connect.bind(null, this.heatMonitorDevice, this.serviceUuid, this.characteristicUuid));
         await this.heartMonitorCharacteristic.startNotifications();
@@ -128,7 +121,7 @@
 
       try {
         this.heatMonitorDevice = await navigator.bluetooth.requestDevice({
-          filters: [{ services: [this.serviceUuid, 0x180D] }]
+          filters: [{ services: [this.serviceUuid] }]
         });
         this.heatMonitorDevice.addEventListener('gattserverdisconnected', this.onDisconnected);
         this.heartMonitorCharacteristic = await root.utils.connect(this.heatMonitorDevice, this.serviceUuid, this.characteristicUuid);
