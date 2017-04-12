@@ -1,18 +1,4 @@
 (function () {
-  function installSW() {
-
-  }
-
-
-  if (navigator.serviceWorker) {
-    installSW();
-  }
-
-  if (!navigator.bluetooth) {
-    //show notification
-    return;
-  }
-
   window.utils = {
     async exponentialBackoff(max, delay, connect) {
       if (max > 0) {
@@ -25,15 +11,13 @@
           return await window.utils.exponentialBackoff(max, delay, connect);
         }
       }
-      // window.utils.disableNoSleep();
       throw new Error('device unavailable');
     },
     async connect(device, serviceUuid, characteristicUuid) {
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService(serviceUuid);
-      const heartMonitorCharacteristic = await service.getCharacteristic(characteristicUuid);
-      // window.utils.enableNoSleep();
-      return heartMonitorCharacteristic;
+      const characteristic = await service.getCharacteristic(characteristicUuid);
+      return characteristic;
     },
     loadScript(url, async) {
       return new Promise(function (resolve, reject) {
@@ -47,17 +31,27 @@
         script.onload = resolve;
         document.head.appendChild(script);
       });
+    },
+    loadStyles(url){
+      return new Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest();
+          xhr.returnType = 'text';
+          xhr.onload = function () {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = url;
+            document.head.appendChild(link);
+            resolve();
+          };
+          xhr.onerror = reject;
+          xhr.open('get', url);
+          xhr.send();
+        });
     }
   }
+  
+  window.utils.loadStyles('/src/heart-monitor/heart-monitor.css');
+  window.utils.loadScript('/src/heart-monitor/heart-monitor.js', true);
 
-  // window.utils.loadScript('noSleep.js', true)
-    // .then(() => {
-      // const noSleep = new NoSleep();
-      // window.utils = Object.assign({}, window.utils, {
-        // enableNoSleep: noSleep.enable.bind(noSleep),
-        // disableNoSleep: noSleep.disable.bind(noSleep),
-      // });
-    // });
-  window.utils.loadScript('heartMonitor.js', true);
-
+  window.utils.loadScript('/src/js/sw-setup.js', false);
 }())

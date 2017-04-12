@@ -19,12 +19,12 @@
                     bpm
                   </div>
                   <svg>
-                    <use xlink:href="alive.svg#heart"></use>
+                    <use xlink:href="src/heart-monitor/alive.svg#heart"></use>
                   <svg>
                 </div>
             </div>
             <svg>
-             <use xlink:href="alive.svg#bounce-line"></use>
+             <use xlink:href="src/heart-monitor/alive.svg#bounce-line"></use>
             </svg>
         </button>    
     `;
@@ -118,6 +118,7 @@
     }
 
     async subscribeToHRUpdates() {
+      if (!navigator.bluetooth) return;
 
       try {
         this.heatMonitorDevice = await navigator.bluetooth.requestDevice({
