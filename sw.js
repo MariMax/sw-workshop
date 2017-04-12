@@ -53,3 +53,25 @@ self.addEventListener('fetch', (event) => event.respondWith(
 
 // cache first network later
 // generic offline response
+
+// network request and put data into the cache
+self.addEventListener('fetch', (event) => {
+  const request = event.request.clone();
+
+  return event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          //smth wrong
+          return response;
+        }
+
+        const responseForCache = response.clone();
+
+        caches.open(CACHE_NAME)
+          .then(cache=>cache.put(request, responseForCache));
+        return response;  
+      })
+  )
+
+});
