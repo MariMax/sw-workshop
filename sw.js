@@ -1,4 +1,4 @@
-var CACHE_NAME = 'cache-v1';
+var CACHE_NAME = 'cache-step-2';
 var filesToCache = [
   '/',
   '/index.html',
@@ -10,9 +10,13 @@ var filesToCache = [
   '/src/heart-monitor/heart-monitor.js',
 ];
 
-self.addEventListener('install', (event) => {
-  return event.waitUntil(
+self.addEventListener('install', (event) => event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(filesToCache))
-  );
-});
+  ));
+
+self.addEventListener('fetch', (event) => event.respondWith(
+    caches.match(event.request, {cacheName:CACHE_NAME})
+      .then(response => response || fetch(event.request)
+    )
+  ));
