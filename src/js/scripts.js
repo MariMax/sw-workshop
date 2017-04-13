@@ -1,6 +1,6 @@
 (function () {
-  window.utils = {
-    async exponentialBackoff(max, delay, connect) {
+  class Utils {
+    static async exponentialBackoff(max, delay, connect) {
       if (max > 0) {
         try {
           return await connect();
@@ -12,14 +12,16 @@
         }
       }
       throw new Error('device unavailable');
-    },
-    async connect(device, serviceUuid, characteristicUuid) {
+    }
+
+    static async connect(device, serviceUuid, characteristicUuid) {
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService(serviceUuid);
       const characteristic = await service.getCharacteristic(characteristicUuid);
       return characteristic;
-    },
-    loadScript(url, async) {
+    }
+
+    static loadScript(url, async) {
       return new Promise(function (resolve, reject) {
         var script = document.createElement('script');
         script.src = url;
@@ -31,27 +33,33 @@
         script.onload = resolve;
         document.head.appendChild(script);
       });
-    },
-    loadStyles(url){
+    }
+
+    static loadStyles(url) {
       return new Promise(function (resolve, reject) {
-          var xhr = new XMLHttpRequest();
-          xhr.returnType = 'text';
-          xhr.onload = function () {
-            var link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = url;
-            document.head.appendChild(link);
-            resolve();
-          };
-          xhr.onerror = reject;
-          xhr.open('get', url);
-          xhr.send();
-        });
+        var xhr = new XMLHttpRequest();
+        xhr.returnType = 'text';
+        xhr.onload = function () {
+          var link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = url;
+          document.head.appendChild(link);
+          resolve();
+        };
+        xhr.onerror = reject;
+        xhr.open('get', url);
+        xhr.send();
+      });
     }
   }
-  
+
+  window.utils = Utils;
+
   window.utils.loadStyles('/src/heart-monitor/heart-monitor.css');
   window.utils.loadScript('/src/heart-monitor/heart-monitor.js', true);
 
-  window.utils.loadScript('/src/js/sw-setup.js', false);
+  window.utils.loadStyles('/src/toaster/toaster.css');
+  window.utils.loadScript('/src/toaster/toaster.js', true);
+
+  window.utils.loadScript('/src/js/sw-manager.js', false);
 }())
