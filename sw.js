@@ -1,17 +1,13 @@
-const swVersion = '1.0.1';
-const CACHE_NAME = 'cache-v2';
-const filesToCache = [
+import * as assets from './src/assets.json';
+
+const swVersion = assets.metadata.version;
+const CACHE_NAME = `cache-step-6-${swVersion}`;
+
+const files = Object.keys(assets.bundle).map(key=>`/${assets.bundle[key]}`);
+const filesToCache = files.concat([
   '/',
   '/index.html',
-  '/src/css/styles.css',
-  '/src/js/scripts.js',
-  '/src/js/sw-setup.js',
-  '/src/heart-monitor/alive.svg',
-  '/src/heart-monitor/heart-monitor.css',
-  '/src/heart-monitor/heart-monitor.js',
-  '/src/toaster/toaster.js',
-  '/src/toaster/toaster.js',
-];
+]);
 
 self.addEventListener('install', (event) => event.waitUntil(
   caches.open(CACHE_NAME)
