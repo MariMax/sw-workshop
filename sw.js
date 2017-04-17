@@ -1,13 +1,9 @@
-var CACHE_NAME = 'cache-v1';
+var CACHE_NAME = 'cache-step-3';
 var filesToCache = [
   '/',
   '/index.html',
   '/src/css/styles.css',
   '/src/js/scripts.js',
-  '/src/js/sw-setup.js',
-  '/src/heart-monitor/alive.svg',
-  '/src/heart-monitor/heart-monitor.css',
-  '/src/heart-monitor/heart-monitor.js',
 ];
 
 self.addEventListener('install', (event) => event.waitUntil(
@@ -17,19 +13,19 @@ self.addEventListener('install', (event) => event.waitUntil(
 
 // // cache with network fallback
 // self.addEventListener('fetch', (event) => event.respondWith(
-//     caches.match(event.request)
+//     caches.match(event.request, {cacheName:CACHE_NAME})
 //       .then(response => response || fetch(event.request)
 //     )
 //   ));
 
-//network with cache fallback
-self.addEventListener('fetch', (event) => event.respondWith(
-  fetch(event.request)
-    .then(response => {
-      if (response.status >= 200 && response.status < 400) return response;
-      return caches.match(event.request)
-    })
-));
+// //network with cache fallback
+// self.addEventListener('fetch', (event) => event.respondWith(
+//   fetch(event.request)
+//     .then(response => {
+//       if (response.status >= 200 && response.status < 400) return response;
+//       return caches.match(event.request, {cacheName:CACHE_NAME})
+//     })
+// ));
 
 // //network/cache race
 // function promiseAny(promises) {
@@ -46,7 +42,7 @@ self.addEventListener('fetch', (event) => event.respondWith(
 
 // self.addEventListener('fetch', (event) => event.respondWith(
 //   promiseAny([
-//       caches.match(event.request),
+//       caches.match(event.request, {cacheName:CACHE_NAME}),
 //       fetch(event.request)
 //     ])
 // ));
@@ -55,23 +51,28 @@ self.addEventListener('fetch', (event) => event.respondWith(
 // generic offline response
 
 // network request and put data into the cache
-self.addEventListener('fetch', (event) => {
-  const request = event.request.clone();
+self.addEventListener('fetch', (event) => event.respondWith(
+  caches.match(event.request, {cacheName:CACHE_NAME})
+    .then((response) => {
+      // Cache hit - return response
+      if (response) {
+        return response;
+      }
 
-  return event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          //smth wrong
+      const request = event.request.clone();
+
+      return fetch(event.request)
+        .then(response => {
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            //smth wrong
+            return response;
+          }
+
+          const responseForCache = response.clone();
+
+          caches.open(CACHE_NAME)
+            .then(cache => cache.put(request, responseForCache));
           return response;
-        }
-
-        const responseForCache = response.clone();
-
-        caches.open(CACHE_NAME)
-          .then(cache=>cache.put(request, responseForCache));
-        return response;  
-      })
-  )
-
-});
+        })
+    })
+));
