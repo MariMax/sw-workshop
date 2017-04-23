@@ -1,6 +1,6 @@
 {
   "name": "gum",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "scripts.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build-app": "$(npm bin)/webpack --config ./webpack.main.config.js",
     "build-sw": "$(npm bin)/webpack --config ./webpack.sw.config.js",
     "build": "npm run clear && npm run build-app && npm run build-sw",
-    "bump-version":"npm version patch",
+    "bump-version": "npm version patch",
     "prepush": "npm run bump-version",
     "start": "npm run build && browser-sync start --server 'dist' --no-open"
   },
