@@ -6,10 +6,10 @@
   "scripts": {
     "clear": "rm -rf ./dist",
     "build-app": "$(npm bin)/webpack --config ./webpack.main.config.js",
-    "build-sw": "$(npm bin)/webpack --config ./webpack.sw.config.js",
     "build": "npm run clear && npm run build-app && npm run build-sw",
     "bump-version": "npm version patch",
     "prepush": "npm run bump-version",
+    "build-sw": "sw-precache --config ./sw.config.js && mv ./service-worker.js ./dist/sw.js",
     "start": "npm run build && browser-sync start --server 'dist' --no-open"
   },
   "author": "",
@@ -24,6 +24,7 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "html-webpack-plugin": "^2.28.0",
     "husky": "^0.13.3",
+    "sw-precache": "^5.1.0",
     "webpack": "^2.4.1"
   }
 }
