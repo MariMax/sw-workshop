@@ -1,4 +1,4 @@
-importScripts('/sw-precaching.js', '/sw-routing.js', '/sw-broadcast-cache-update.js', '/sw-runtime-caching.js', '/sw-cache-expiration.js');
+importScripts('/sw-precaching.js', '/sw-routing.js', '/sw-runtime-caching.js', '/sw-cache-expiration.js');
 
 import * as assets from './src/assets.json';
 
