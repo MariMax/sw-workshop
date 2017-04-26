@@ -1,0 +1,165 @@
+:root{
+  --heart-rate-bg:#0B1D0A;
+  --default-body-color: #ccc;
+  --heart-rate-hue: 110;
+  --heart-rate-font-size: 25rem;
+  --heart-icon-color: red;
+  --heart-top-position: -5rem;
+  --heart-size: 7rem;
+  --animation-duration: 1000;
+}
+
+html, body {
+  box-sizing: border-box;
+  font-size: 10px;
+  margin:0;
+  padding:0;
+  background:var(--default-body-color);
+  width: 100vw;
+  height: 100vh;
+}
+
+body{
+  display: flex;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.content{
+  flex:1;
+  overflow: hidden;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.content heart-monitor{
+  flex:1;
+  display:flex;
+}.heart{
+    background-color:var(--heart-rate-bg);
+    color: hsl(var(--heart-rate-hue), 68%, 52%);
+    flex: 1;
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    padding: 0;
+    border: none;
+}
+
+.heart>svg{
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.heart.animate{
+  -webkit-appearance: none;
+  stroke-dasharray: 200 1010;
+  stroke-dashoffset: 200;
+}
+
+.heart>div{
+  display: flex;
+  align-items: baseline;
+  font-family: monospace;
+  padding: 0 2rem;
+}
+
+.heart .value{
+  color: hsl(var(--heart-rate-hue), 68%, 52%);
+  font-size: var(--heart-rate-font-size);
+}
+
+.value-name{
+  display: none;
+  position: relative;
+}
+
+.value-name svg{
+  width: var(--heart-size);
+  height: var(--heart-size);
+  position: absolute;
+  top: var(--heart-top-position);
+  color:var(--heart-icon-color);
+}
+
+.heart.animate .value-name{
+  display: flex;
+  flex-direction: column;
+  font-size: calc(var(--heart-rate-font-size)/2);
+}
+
+.bounce-line-animation{
+  animation: bounce-line calc(var(--animation-duration)*1ms) linear;
+}
+
+.heart-beat-animation{
+  animation: heart-beat calc(var(--animation-duration)*1ms) linear;
+}
+
+@media (orientation: landscape){
+  :root{
+    --heart-rate-font-size:15rem;
+    --heart-top-position: -2.5rem;
+    --heart-size: 3rem;
+  }
+}
+
+@keyframes bounce-line {
+  0% {
+    stroke-dashoffset: 200;
+  }
+  100% {
+    stroke-dashoffset: -1006;
+  }
+}
+
+@keyframes heart-beat {
+  25% {transform:scale(1)}
+  35% {transform:scale(1.3)}
+  40% {transform:scale(1)}
+  50% {transform:scale(1.5)}
+  80% {transform:scale(1)}
+}:root{
+  --toaster-base-line: 1rem;
+  --toaster-background: rgba(255, 156, 5, 0.78);
+  --toaster-shadow: rgba(0, 0, 0, 0.3);
+}
+
+.toast-container {
+  position: fixed;
+  padding: calc(var(--toaster-base-line) * 2 );
+  width: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.toast {
+  transition: opacity 1s cubic-bezier(0, 0, 0.3, 1);
+  font-size: 15px;
+  font-weight: 500;
+  width: 100%;
+  margin-top: calc(var(--toaster-base-line) * 2 );
+  pointer-events: none;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.toast__content {
+  padding: calc(var(--toaster-base-line) * 2 ) calc(var(--toaster-base-line) * 3 );
+  background: var(--toaster-background);
+  color: var(--white);
+  border-radius: 2px;
+  display: inline;
+  box-shadow: 0 3px 5px var(--toaster-shadow);
+}
+
+.toast--dismissed {
+  opacity: 0;
+}
