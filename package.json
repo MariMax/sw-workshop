@@ -1,13 +1,13 @@
 {
   "name": "gum",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "scripts.js",
   "scripts": {
     "clear": "rm -rf ./dist",
     "build-app": "$(npm bin)/webpack --config ./webpack.main.config.js",
     "build": "npm run clear && npm run build-app && npm run build-sw",
-    "bump-version": "npm version patch",
+    "bump-version": "npm --no-git-tag-version version patch",
     "prepush": "npm run bump-version",
     "build-sw": "sw-precache --config ./sw.config.js && mv ./service-worker.js ./dist/sw.js",
     "start": "npm run build && browser-sync start --server 'dist' --no-open"
