@@ -1,0 +1,43 @@
+.app{
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.app.offline{
+  --header-bg-color: #9E9E9E;
+  --header-text-color: #000;
+}
+
+.app-header {
+  background-color: var(--header-bg-color);
+  padding: 1rem;
+  color: var(--header-text-color);
+  box-shadow: var(--header-box-shadow);
+}
+
+.app-header h2{
+  cursor: pointer;
+  display: inline-block;
+}
+
+.app-container{
+  flex: 1;
+  display: flex;
+}
+
+.app-container > section{
+  flex: 1;
+  display: flex;
+  
+  overflow-x: hidden;
+  overflow-y: auto;
+  transform: translateZ(0);
+
+}
+
+.app-footer{
+  background-color: var(--header-bg-color);
+  padding: 1rem;
+}

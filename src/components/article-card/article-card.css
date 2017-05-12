@@ -1,0 +1,42 @@
+.article-card-header{
+    box-shadow: var(--card-box-shadow);
+    margin: 1rem;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    text-decoration: initial;
+}
+
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -100rem 0
+  }
+  100% {
+    background-position: 100rem 0
+  }
+}
+
+.title {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.article-card-header .title.loading {
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  color: transparent;
+  background: var(--loading-gradient);
+  background-size: 200rem 1rem;
+}
+
+.offline .save-for-offline{
+  display: none;
+}

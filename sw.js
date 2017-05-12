@@ -3,7 +3,7 @@ importScripts('/sw-precaching.js', '/sw-routing.js', '/sw-runtime-caching.js', '
 import * as assets from './src/assets.json';
 
 const swVersion = assets.metadata.version;
-const CACHE_NAME = `cache-step-8-${swVersion}`;
+const CACHE_NAME = `cache-step-9-${swVersion}`;
 
 const revCacheManager = new goog.precaching.RevisionedCacheManager();
 revCacheManager.addToCacheList({
@@ -20,6 +20,7 @@ const unrevCacheManager = new goog.precaching.UnrevisionedCacheManager();
 unrevCacheManager.addToCacheList({
   unrevisionedFiles: [
     '/',
+    '/index.html'
   ]
 });
 
