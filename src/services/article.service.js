@@ -1,22 +1,16 @@
 import { EventTopics } from './eventTopics';
-import {appConfig} from './config';
+import { NetworkServiceFactory } from './network.service';
 
 class ArticleService {
   contentIndex = {};
   subscribers = [];
   baseURL = '';
-  _articles = [
-    { header: '1', articleId: 1 },
-    { header: '2', articleId: 2 },
-    { header: '3', articleId: 3 },
-    { header: '4', articleId: 4 },
-    { header: '5', articleId: 5 },
-  ];
+  _headers = [];
   activeHeadersRequest = null;
   activeArticleRequests = [];
 
-  constructor(baseURL) {
-    this.baseURL = baseURL || this.baseURL;
+  constructor(networkService) {
+    this.networkService = networkService;
   }
 
   subscribe(fn) {
@@ -28,63 +22,88 @@ class ArticleService {
     this.subscribers.forEach(i => i(topic));
   }
 
-  get articles() {
-    return this._articles;
+  get headers() {
+    return this._headers;
   }
 
-  downloadHeaders(force) {
-    if (this.activeHeadersRequest){
+  get articles() {
+    return Object.keys(this.contentIndex).reduce((r, key) => [...r, this.contentIndex[key]], []);
+  }
+
+  async saveArticle(id, header, body) {
+    id = id === 'new' ? null : id;
+    const article = { header, body, id };
+
+    try {
+      const newArticle = await this.networkService.post('article', article);
+      this.contentIndex = { ...this.contentIndex, [article.id]: { body, createdDate: article.createdDate } };
+      this._headers = this._headers
+        .filter(i => i.articleId !== article.id)
+        .concat({ articleId: article.id, header, createdDate: article.createdDate });
+
+      this.notify(EventTopics.NEW_ARTICLE);
+      this.notify(EventTopics.NEW_HEADERS);
+
+    } catch (e) {
+      console.error('smth went wrong on save article', e);
+    }
+  }
+
+  async downloadHeaders(force) {
+    if (this.activeHeadersRequest) {
       return this.activeHeadersRequest;
     }
 
-    if (this.articles.length>0 && !force){
-      return Promise.resolve(this.articles);
-      // return new Promise(resolve => setTimeout(() => resolve(this.articles), 2000));
+    if (this.headers.length > 0 && !force) {
+      return Promise.resolve(this.header);
     }
 
-    this.activeHeadersRequest = fetch(`${this.baseURL}/headers`)
-      .then(response => response.json())
-      .then(headers => this.articles = headers)
-      .then(() => this.notify(EventTopics.NEW_HEADERS))
-      .catch(() => { console.error('smth went wrong on articles download') })
-      .then(()=>{
-        this.activeHeadersRequest = null;
-        return this.articles
-      });
-    return this.activeHeadersRequest;  
+    this.activeHeadersRequest = this.networkService.get(`headers`);
+    try {
+      const headers = await this.activeHeadersRequest;
+      this._headers = headers;
+      this.notify(EventTopics.NEW_HEADERS);
+    } catch (e) {
+      console.error('smth went wrong on articles download', e);
+    } finally {
+      this.activeHeadersRequest = null;
+      return this.headers;
+    }
   }
 
-  downloadArticle(articleId, force) {
-    if (!articleId) return Promise.resolve('');
-    const activeRequest = this.activeArticleRequests.find(i=>i.articleId === articleId);
-    if (activeRequest){
+  async downloadArticle(articleId, force) {
+    if (!articleId) return Promise.reject(new Error('please provide article ID'));
+    const activeRequest = this.activeArticleRequests.find(i => i.articleId === articleId);
+    if (activeRequest) {
       return activeRequest.promise;
     }
 
-    if (this.contentIndex[articleId] && !force){
+    if (this.contentIndex[articleId] && !force) {
       return Promise.resolve(this.contentIndex[articleId]);
     }
 
-    const promise = fetch(`${this.baseURL}/article/${articleId}`)
-      .then(response => response.json())
-      .then(content => this.contentIndex[articleId] = content)
-      .then(() => this.notify(EventTopics.NEW_ARTICLE))
-      .catch(() => { console.error('smth went wrong on download article content') })
-      .then(()=>{
-        this.activeArticleRequests = this.activeArticleRequests.filter(i=>i.promise !== promise);
-        return this.contentIndex[articleId]
-      });
-    this.activeArticleRequests = [...this.activeArticleRequests, {articleId, promise}];
-    return promise;  
+    const promise = this.networkService.get(`article/${articleId}`);
+    this.activeArticleRequests = [...this.activeArticleRequests, { articleId, promise }];
+    try {
+      const content = await promise;
+      this.contentIndex[articleId] = content;
+      this.notify(EventTopics.NEW_ARTICLE);
+    } catch (e) {
+      console.error('smth went wrong on download article content', e);
+    } finally {
+      this.activeArticleRequests = this.activeArticleRequests.filter(i => i.promise !== promise);
+      return this.contentIndex[articleId];
+    }
   }
 }
 
 export class ArticleServiceFactory {
   static articleService = null;
 
-  static getArticleService(){
+  static getArticleService() {
     if (ArticleServiceFactory.articleService) return ArticleServiceFactory.articleService;
-    ArticleServiceFactory.articleService = new ArticleService(appConfig.baseUrl);
+    const networkService = NetworkServiceFactory.getNetworkSetvice();
+    ArticleServiceFactory.articleService = new ArticleService(networkService);
     return ArticleServiceFactory.articleService;
   }
 }

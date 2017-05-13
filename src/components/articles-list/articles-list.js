@@ -10,23 +10,26 @@ export class ArticlesList extends Component {
     this.articles = [];
     this.articleService = ArticleServiceFactory.getArticleService();
     this.handleCollectionUpdate = this.handleCollectionUpdate.bind(this);
-    this.state = {loading: false}
+    this.state = { loading: false }
   }
 
   async componentDidMount() {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     this.subscription = this.articleService.subscribe(this.handleCollectionUpdate);
-    this.articles = await this.articleService.downloadHeaders();
-    this.setState({loading: false});
+    try {
+      await this.articleService.downloadHeaders();
+    } finally {
+      this.setState({ loading: false });
+    }
   }
-  
+
   componentWillUnmount() {
     this.subscription();
   }
 
   handleCollectionUpdate(topic) {
     if (EventTopics.NEW_HEADERS === topic) {
-      this.articles = this.articleService.articles;
+      this.articles = this.articleService.headers;
       this.forceUpdate();
     }
   }

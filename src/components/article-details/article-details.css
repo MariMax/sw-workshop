@@ -32,7 +32,7 @@
   background: var(--white);
   height: 100%;
   box-shadow: var(--side-pane-box-shadow);
-  transform: translateX(100vw);
+  transform: translateX(110vw);
   display: flex;
   flex-direction: column;
   will-change: transform;
