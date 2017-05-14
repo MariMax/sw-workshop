@@ -49,3 +49,12 @@ html, body {
 .btn.btn--icon{
   min-width: auto;
 }
+
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -100rem 0
+  }
+  100% {
+    background-position: 100rem 0
+  }
+}

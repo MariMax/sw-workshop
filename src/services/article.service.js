@@ -36,13 +36,14 @@ class ArticleService {
 
     try {
       const newArticle = await this.networkService.post('article', article);
-      this.contentIndex = { ...this.contentIndex, [article.id]: { body, createdDate: article.createdDate } };
+      this.contentIndex = { ...this.contentIndex, [newArticle.id]: { body, createdDate: article.createdDate } };
       this._headers = this._headers
         .filter(i => i.articleId !== article.id)
-        .concat({ articleId: article.id, header, createdDate: article.createdDate });
+        .concat({ articleId: newArticle.id, header, createdDate: newArticle.createdDate });
 
       this.notify(EventTopics.NEW_ARTICLE);
       this.notify(EventTopics.NEW_HEADERS);
+      return newArticle;
 
     } catch (e) {
       console.error('smth went wrong on save article', e);
@@ -55,7 +56,7 @@ class ArticleService {
     }
 
     if (this.headers.length > 0 && !force) {
-      return Promise.resolve(this.header);
+      return Promise.resolve(this.headers);
     }
 
     this.activeHeadersRequest = this.networkService.get(`headers`);
@@ -82,7 +83,7 @@ class ArticleService {
       return Promise.resolve(this.contentIndex[articleId]);
     }
 
-    const promise = this.networkService.get(`article/${articleId}`);
+    const promise = this.networkService.get(`article?articleId=${articleId}`);
     this.activeArticleRequests = [...this.activeArticleRequests, { articleId, promise }];
     try {
       const content = await promise;

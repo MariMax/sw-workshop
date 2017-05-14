@@ -1,3 +1,3 @@
 export const appConfig = {
-  baseUrl: '',
+  baseUrl: 'https://us-central1-max-firebase.cloudfunctions.net',
 };

@@ -98,5 +98,15 @@
 .side-pane__body textarea{
   flex: 1;
   resize: none;
-  font-size: 1.5rem;
+  font-size: 2rem;
+  padding: 1rem;
+}
+
+.side-pane__loading-article{
+  flex: 1;
+  animation: placeHolderShimmer 1.5s forwards infinite linear;
+  color: transparent;
+  background: var(--loading-gradient);
+  background-size: 200rem 1rem;
+  align-self: stretch;
 }

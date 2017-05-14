@@ -7,7 +7,7 @@ import './articles-list.css';
 export class ArticlesList extends Component {
   constructor() {
     super();
-    this.articles = [];
+    this.headers = [];
     this.articleService = ArticleServiceFactory.getArticleService();
     this.handleCollectionUpdate = this.handleCollectionUpdate.bind(this);
     this.state = { loading: false }
@@ -29,7 +29,7 @@ export class ArticlesList extends Component {
 
   handleCollectionUpdate(topic) {
     if (EventTopics.NEW_HEADERS === topic) {
-      this.articles = this.articleService.headers;
+      this.headers = this.articleService.headers;
       this.forceUpdate();
     }
   }
@@ -38,7 +38,7 @@ export class ArticlesList extends Component {
     return (
       <section className="articles-list">
         {this.state.loading && <ArticleCard header="empty" loading={true} />}
-        {this.articles.map(i => <ArticleCard header={i.header} articleId={i.articleId} key={i.articleId} />)}
+        {this.headers.map(i => <ArticleCard header={i.header} lastUpdate={i.lastUpdate} articleId={i.articleId} key={i.articleId} />)}
       </section>
     );
   }
