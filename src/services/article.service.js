@@ -30,6 +30,10 @@ class ArticleService {
     return Object.keys(this.contentIndex).reduce((r, key) => [...r, this.contentIndex[key]], []);
   }
 
+  getArticle(articleId){
+    return this.contentIndex[articleId];
+  }
+
   async saveArticle(id, header, body) {
     id = id === 'new' ? null : id;
     const article = { header, body, id };

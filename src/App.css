@@ -6,8 +6,8 @@
 }
 
 .app.offline{
-  --header-bg-color: #9E9E9E;
-  --header-text-color: #000;
+  --header-bg-color: var(--offline-gray);
+  --header-text-color: var(--black);
 }
 
 .app-header {
@@ -22,6 +22,15 @@
 .app-header h2{
   cursor: pointer;
   display: inline-block;
+}
+
+.app-header button{
+  color: var(--white);
+}
+
+.offline .app-header button{
+  display: none;
+  color: var(--black);
 }
 
 .app-container{

@@ -63,6 +63,10 @@
   font-size: 2rem;
 }
 
+.offline .side-pane__header{
+  background-color: var(--offline-gray-pane);
+}
+
 .side-pane__header input{
   flex: 1;
   align-self: stretch;
@@ -78,14 +82,28 @@
   outline: none;
 }
 
+.offline .side-pane__header input{
+  caret-color: var(--black);
+  color: var(--black);
+}
+
 .side-pane__footer{
   color: var(--white);
   padding: 1rem;
   background: var(--side-pane-header-bg);
 }
 
+.offline .side-pane__footer{
+  background-color: var(--offline-gray-pane);
+}
+
 .side-pane__footer button{
   color: var(--white);
+}
+
+.offline .side-pane__footer button{
+  color: var(--black);
+  display: none;
 }
 
 .side-pane__body {

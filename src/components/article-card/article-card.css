@@ -7,6 +7,15 @@
     justify-content: space-between;
     padding: 1rem;
     text-decoration: initial;
+    background-color: var(--white);
+}
+
+.offline .article-card-header{
+  background-color: var(--offline-gray-pane);
+}
+
+.offline .article-card-header.offline-available{
+  background-color: var(--offline-available);
 }
 
 .title {
@@ -26,6 +35,22 @@
 
 .offline .save-for-offline{
   display: none;
+}
+
+.offline .save-for-offline.content-available{
+  display: block;
+}
+
+.offline .save-for-offline.content-available.offline-available{
+  display: none;
+}
+
+.last-update{
+  display: none;
+}
+
+.offline .last-update{
+  display: block;
 }
 
 .article-card-header .title.last-update{

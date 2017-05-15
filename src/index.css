@@ -1,6 +1,10 @@
 :root{
   --white: #fff;
+  --black: #000;
+  --offline-gray: #9E9E9E;
+  --offline-gray-pane: #eeeeee;
   --header-bg-color: #3F51B5;
+  --offline-available: #FAFAFA;
   --header-text-color: #fff;
   --active-button: rgba(158,158,158,.2);
   --loading-gradient: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
