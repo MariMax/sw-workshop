@@ -20,7 +20,7 @@ export class ArticleCard extends Component {
     if (event && event !== EventTopics.NEW_ARTICLE) return;
     let offlineAvailable = false;
     try{
-      const articleIDB = await idbKeyVal.get(this.props.articleId);
+      const articleIDB = await this.articleService.isArticleOffline(this.props.articleId);
       offlineAvailable = !!articleIDB;
     } catch(e) {}
     
@@ -45,19 +45,11 @@ export class ArticleCard extends Component {
     event.stopPropagation()
 
     try {
-      const article = await this.articleService.downloadArticle(this.props.articleId, navigator.onLine);
-      const articleToSave = {
-        body: article.body,
-        header: this.props.header,
-        lastUpdate: navigator.onLine?new Date.valueOf():'',
-        id: this.props.articleId,
-      };
-      await idbKeyVal.set(this.props.articleId, JSON.stringify(articleToSave));
+      await this.articleService.saveForOffline(this.props.header, this.props.articleId);
       this.setState({offlineAvailable: true});
     } catch (e) {
       console.error(e);
     }
-
   }
 
   render() {

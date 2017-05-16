@@ -1,10 +1,12 @@
 const path = require('path');
 
+process.env.NODE_ENV = "production";
+
 module.exports = {
+  entry: './sw.js',
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].[hash].js',
-    chunkFilename: "[id].[chunkhash].bundle.js"
+    path: path.join(__dirname, '../build'),
+    filename: 'sw.js',
   },
   module: {
     rules: [
@@ -14,7 +16,6 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           plugins: [
-            // ['es2015', {module: false}]
             ["transform-es2015-modules-commonjs"]
           ]
         }

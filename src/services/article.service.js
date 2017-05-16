@@ -1,5 +1,6 @@
 import { EventTopics } from './eventTopics';
 import { NetworkServiceFactory } from './network.service';
+import * as idbKeyVal from 'idb-keyval';
 
 class ArticleService {
   contentIndex = {};
@@ -30,7 +31,7 @@ class ArticleService {
     return Object.keys(this.contentIndex).reduce((r, key) => [...r, this.contentIndex[key]], []);
   }
 
-  getArticle(articleId){
+  getArticle(articleId) {
     return this.contentIndex[articleId];
   }
 
@@ -99,6 +100,21 @@ class ArticleService {
       this.activeArticleRequests = this.activeArticleRequests.filter(i => i.promise !== promise);
       return this.contentIndex[articleId];
     }
+  }
+
+  async saveForOffline(header, articleId) {
+      const article = await this.downloadArticle(articleId, navigator.onLine);
+      const articleToSave = {
+        body: article.body,
+        header,
+        lastUpdate: navigator.onLine ? new Date.valueOf() : article.createdDate,
+        id: articleId,
+      };
+      await idbKeyVal.set(articleId, JSON.stringify(articleToSave));
+  }
+
+  async isArticleOffline(articleId){
+    return await idbKeyVal.get(articleId)
   }
 }
 

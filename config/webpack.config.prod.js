@@ -1,15 +1,19 @@
-'use strict';
-
-var autoprefixer = require('autoprefixer');
+const package = require('../package.json');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var ManifestPlugin = require('webpack-manifest-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
 var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
 
-
+const assetsPlugin = new AssetsPlugin({
+  metadata: { version: package.version },
+  path: './src',
+  fullPath: false,
+  prettyPrint: true,
+  filename: 'assets.json'
+});
 
 var publicPath = paths.servedPath;
 var shouldUseRelativeAssetPaths = publicPath === './';
@@ -37,33 +41,23 @@ module.exports = {
     publicPath: publicPath
   },
   resolve: {
-    fallback: paths.nodePaths,
-    extensions: ['.js', '.json', '.jsx', ''],
+    extensions: ['.js', '.json', '.jsx'],
   },
-  
+
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
-        loader: 'babel',
-        
+        loader: 'babel-loader',
+
       },
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract(
-          'style',
-          'css?importLoaders=1',
-          extractTextPluginOptions
-        )
+        use: ExtractTextPlugin.extract({
+          use: [{ loader: 'css-loader', options: extractTextPluginOptions }]
+        }),
       },
-      {
-        test: /\.svg$/,
-        loader: 'file',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
-      }
     ]
   },
 
@@ -87,6 +81,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin(env.stringified),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new ExtractTextPlugin(cssFilename)
+    new ExtractTextPlugin(cssFilename),
+    assetsPlugin,
   ],
 };

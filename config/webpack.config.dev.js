@@ -1,11 +1,9 @@
 'use strict';
 
-var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
@@ -14,6 +12,7 @@ var paths = require('./paths');
 var publicPath = '/';
 var publicUrl = '';
 var env = getClientEnvironment(publicUrl);
+const cssFilename = 'bundle.css';
 
 module.exports = {
   devtool: 'cheap-module-source-map',
@@ -25,33 +24,35 @@ module.exports = {
     publicPath: publicPath
   },
   resolve: {
-    fallback: paths.nodePaths,
-    extensions: ['.js', '.json', '.jsx', ''],
+    extensions: ['.js', '.json', '.jsx'],
   },
-  
+
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           cacheDirectory: true
         }
       },
       {
         test: /\.css$/,
-        loader: 'style!css?importLoaders=1'
+        use: ExtractTextPlugin.extract({
+          use: [{ loader: 'css-loader' }]
+        }),
       },
     ]
   },
-  
+
   plugins: [
     new InterpolateHtmlPlugin(env.raw),
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
     }),
+    new ExtractTextPlugin(cssFilename),
     new webpack.DefinePlugin(env.stringified),
   ],
 };
