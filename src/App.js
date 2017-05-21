@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Body } from './components/body/body';
+import { SWService } from './services/sw.service';
 
 import './App.css';
 
@@ -18,6 +19,10 @@ export class App extends Component {
 
   handleOnlineStatusChange(event) {
     this.setState({ online: event.type === 'online' });
+  }
+
+  componentDidMount() {
+    SWService.installSW();
   }
 
   render() {

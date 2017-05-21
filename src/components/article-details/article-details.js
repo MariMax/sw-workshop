@@ -131,7 +131,7 @@ export class ArticleDetails extends Component {
           </section>
           <footer className="side-pane__footer">
             <button disabled={this.state.loading} type="button" className="btn btn--sm" onClick={this.save}>Save</button>
-            {this.state.lastUpdate && <div className="last-update">Last update: <span>{this.state.lastUpdate}</span></div>}
+            {this.state.lastUpdate && <div className="last-update">Last update: <span>{new Date(this.state.lastUpdate).toLocaleDateString()}</span></div>}
           </footer>
         </div>
       </aside>

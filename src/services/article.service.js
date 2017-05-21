@@ -40,7 +40,7 @@ class ArticleService {
     const article = { header, body, id };
 
     try {
-      const newArticle = await this.networkService.post('article', article);
+      const newArticle = await this.networkService.post('api/article', article);
       this.contentIndex = { ...this.contentIndex, [newArticle.id]: { body, createdDate: article.createdDate } };
       this._headers = this._headers
         .filter(i => i.articleId !== article.id)
@@ -64,7 +64,7 @@ class ArticleService {
       return Promise.resolve(this.headers);
     }
 
-    this.activeHeadersRequest = this.networkService.get(`headers`);
+    this.activeHeadersRequest = this.networkService.get(`api/headers`);
     try {
       const headers = await this.activeHeadersRequest;
       this._headers = headers;
@@ -88,7 +88,7 @@ class ArticleService {
       return Promise.resolve(this.contentIndex[articleId]);
     }
 
-    const promise = this.networkService.get(`article?articleId=${articleId}`);
+    const promise = this.networkService.get(`api/article/${articleId}`);
     this.activeArticleRequests = [...this.activeArticleRequests, { articleId, promise }];
     try {
       const content = await promise;
@@ -107,7 +107,7 @@ class ArticleService {
       const articleToSave = {
         body: article.body,
         header,
-        lastUpdate: navigator.onLine ? new Date.valueOf() : article.createdDate,
+        lastUpdate: navigator.onLine ? new Date().valueOf() : article.createdDate,
         id: articleId,
       };
       await idbKeyVal.set(articleId, JSON.stringify(articleToSave));

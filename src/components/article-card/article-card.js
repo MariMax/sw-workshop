@@ -59,7 +59,7 @@ export class ArticleCard extends Component {
         <div className={`title ${this.props.loading ? 'loading' : ''}`} >
           {this.props.header}
         </div>
-        {this.props.lastUpdate && <div className={`title last-update`}>{this.props.lastUpdate}</div>}
+        {this.props.lastUpdate && <div className={`title last-update`}><span>Last update:</span> {new Date(this.props.lastUpdate).toLocaleDateString()}</div>}
         {!this.props.loading && <button
           className={`btn save-for-offline 
             ${this.state.offlineAvailable ? 'offline-available' : ''}

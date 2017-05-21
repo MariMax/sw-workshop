@@ -51,6 +51,7 @@
 
 .offline .last-update{
   display: block;
+  color: var(--offline-gray);
 }
 
 .article-card-header .title.last-update{

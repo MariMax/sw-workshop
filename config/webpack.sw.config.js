@@ -1,4 +1,6 @@
 const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const packageJSON = require('../package.json');
 
 process.env.NODE_ENV = "production";
 
@@ -22,4 +24,10 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: `./node_modules/workbox-precaching/build/importScripts/workbox-precaching.prod.v${packageJSON.devDependencies['workbox-precaching'].replace('^','')}.js`, to: '../build/workbox-precaching.js' },
+      { from: `./node_modules/workbox-routing/build/importScripts/workbox-routing.prod.v${packageJSON.devDependencies['workbox-routing'].replace('^','')}.js`, to: '../build/workbox-routing.js' },
+    ])
+  ]
 };
