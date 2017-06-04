@@ -6,9 +6,12 @@ class NetworkService {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   };
+  static _instance;
 
   constructor(baseUrl) {
+    if (NetworkService._instance) return NetworkService._instance;
     this.baseUrl = baseUrl;
+    NetworkService._instance = this;
   }
 
   async post(path, body = {}, options = {}) {
@@ -83,11 +86,8 @@ class NetworkService {
 }
 
 export class NetworkServiceFactory {
-  static networkService = null;
 
   static getNetworkSetvice(baseUrl) {
-    if (NetworkServiceFactory.networkService) return NetworkServiceFactory.networkService;
-    NetworkServiceFactory.networkService = new NetworkService(appConfig.baseUrl);
-    return NetworkServiceFactory.networkService;
+    return new NetworkService(appConfig.baseUrl);
   }
 }

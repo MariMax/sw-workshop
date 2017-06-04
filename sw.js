@@ -71,7 +71,13 @@ const staticFilesRoute = new workbox.routing.RegExpRoute({
 
 const dataRoutes = new workbox.routing.RegExpRoute({
   regExp: /api\/(\w+)/,
-  handler: ({ event, params }) => fetch(event.request).catch(() => handlers[params[0]](event.request)),
+  handler: ({ event, params }) => fetch(event.request)
+  .then(response => {
+    if (response.ok)
+      return response;
+    throw new Error('something bad happened, let the catch do its work');
+  })
+  .catch(() => handlers[params[0]](event.request)),
 });
 
 router.registerRoutes({

@@ -9,9 +9,12 @@ class ArticleService {
   _headers = [];
   activeHeadersRequest = null;
   activeArticleRequests = [];
+  static _instance;
 
   constructor(networkService) {
+    if (ArticleService._instance) return ArticleService._instance;
     this.networkService = networkService;
+    ArticleService._instance = this;
   }
 
   subscribe(fn) {
@@ -119,12 +122,8 @@ class ArticleService {
 }
 
 export class ArticleServiceFactory {
-  static articleService = null;
-
   static getArticleService() {
-    if (ArticleServiceFactory.articleService) return ArticleServiceFactory.articleService;
     const networkService = NetworkServiceFactory.getNetworkSetvice();
-    ArticleServiceFactory.articleService = new ArticleService(networkService);
-    return ArticleServiceFactory.articleService;
+    return new ArticleService(networkService);
   }
 }

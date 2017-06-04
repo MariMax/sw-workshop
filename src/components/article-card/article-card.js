@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArticleServiceFactory } from '../../services/article.service';
 import * as idbKeyVal from 'idb-keyval';
 import { EventTopics } from '../../services/eventTopics';
+import { SWService } from '../../services/sw.service';
 import './article-card.css';
 
 export class ArticleCard extends Component {
@@ -60,7 +61,7 @@ export class ArticleCard extends Component {
           {this.props.header}
         </div>
         {this.props.lastUpdate && <div className={`title last-update`}><span>Last update:</span> {new Date(this.props.lastUpdate).toLocaleDateString()}</div>}
-        {!this.props.loading && <button
+        {!this.props.loading && SWService.swInstalled && <button
           className={`btn save-for-offline 
             ${this.state.offlineAvailable ? 'offline-available' : ''}
             ${this.state.contentAvailable ? 'content-available' : ''}`}
