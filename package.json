@@ -5,18 +5,15 @@
   "main": "scripts.js",
   "scripts": {
     "clear": "rm -rf ./dist",
-    "copy-precaching": "cp ./node_modules/sw-precaching/build/sw-precaching.js ./dist/sw-precaching.js",
-    "copy-routing": "cp ./node_modules/sw-routing/build/sw-routing.js ./dist/sw-routing.js",
-    "copy-runtime-caching": "cp ./node_modules/sw-runtime-caching/build/sw-runtime-caching.js ./dist/sw-runtime-caching.js",
-    "copy-update": "cp ./node_modules/sw-broadcast-cache-update/build/sw-broadcast-cache-update.js ./dist/sw-broadcast-cache-update.js",
-    "copy-expiration": "cp ./node_modules/sw-cache-expiration/build/sw-cache-expiration.js ./dist/sw-cache-expiration.js",
-    "copy": "npm run copy-precaching && npm run copy-routing && npm run copy-runtime-caching && npm run copy-update && npm run copy-expiration",
-    "build-app": "$(npm bin)/webpack --config ./webpack.main.config.js",
-    "build-sw": "$(npm bin)/webpack --config ./webpack.sw.config.js",
+    "build-app": "NODE_ENV=production $(npm bin)/webpack --config ./config/webpack.config.prod.js",
+    "build-sw": "NODE_ENV=production $(npm bin)/webpack --config ./config/webpack.sw.config.js",
+
     "bump-version": "npm version patch",
     "prepush": "npm run bump-version",
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js && $(npm bin)/webpack --config ./config/webpack.sw.config.js",
+
+    "start-dev": "NODE_ENV=development $(npm bin)/webpack --config ./config/webpack.config.dev.js -w",
+    "serve": "firebase serve",
+
     "test": "node scripts/test.js --env=jsdom"
   },
   "dependencies": {

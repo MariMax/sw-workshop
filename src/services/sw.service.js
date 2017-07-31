@@ -11,7 +11,7 @@ export class SWService {
     }
 
     try {
-      const registration = await navigator.serviceWorker.register('sw.js');
+      const registration = await navigator.serviceWorker.register('/sw.js');
       SWService.swAvailable = true;
       SWService.swInstalled = true;
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
