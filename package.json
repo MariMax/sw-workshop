@@ -1,19 +1,16 @@
 {
   "name": "gum",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "",
   "main": "scripts.js",
   "scripts": {
     "clear": "rm -rf ./dist",
     "build-app": "NODE_ENV=production $(npm bin)/webpack --config ./config/webpack.config.prod.js",
     "build-sw": "NODE_ENV=production $(npm bin)/webpack --config ./config/webpack.sw.config.js",
-
     "bump-version": "npm version patch",
     "prepush": "npm run bump-version",
-
     "start-dev": "NODE_ENV=development $(npm bin)/webpack --config ./config/webpack.config.dev.js -w",
     "serve": "firebase serve",
-
     "test": "node scripts/test.js --env=jsdom"
   },
   "dependencies": {
