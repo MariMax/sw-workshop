@@ -1,11 +1,11 @@
 const package = require('../package.json');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
-var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-var paths = require('./paths');
-var getClientEnvironment = require('./env');
+const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const paths = require('./paths');
+const getClientEnvironment = require('./env');
 
 const assetsPlugin = new AssetsPlugin({
   metadata: { version: package.version },
@@ -15,10 +15,10 @@ const assetsPlugin = new AssetsPlugin({
   filename: 'assets.json'
 });
 
-var publicPath = paths.servedPath;
-var shouldUseRelativeAssetPaths = publicPath === './';
-var publicUrl = publicPath.slice(0, -1);
-var env = getClientEnvironment(publicUrl);
+const publicPath = paths.servedPath;
+const shouldUseRelativeAssetPaths = publicPath === './';
+const publicUrl = publicPath.slice(0, -1);
+const env = getClientEnvironment(publicUrl);
 
 if (env.stringified['process.env'].NODE_ENV !== '"production"') {
   throw new Error('Production builds must have NODE_ENV=production.');

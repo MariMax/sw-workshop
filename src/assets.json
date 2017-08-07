@@ -1,9 +1,9 @@
 {
   "main": {
-    "js": "static/js/main.9607b342.js",
-    "css": "static/css/main.9b830fc3.css"
+    "js": "static/js/bundle.js",
+    "css": "static/css/bundle.css"
   },
   "metadata": {
-    "version": "1.0.16"
+    "version": "1.0.19"
   }
 }

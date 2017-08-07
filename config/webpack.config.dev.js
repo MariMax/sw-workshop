@@ -1,18 +1,24 @@
-'use strict';
+const webpack = require('webpack');
+const package = require('../package.json');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
+const getClientEnvironment = require('./env');
+const paths = require('./paths');
 
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var getClientEnvironment = require('./env');
-var paths = require('./paths');
+const assetsPlugin = new AssetsPlugin({
+  metadata: { version: package.version },
+  path: './src',
+  fullPath: false,
+  prettyPrint: true,
+  filename: 'assets.json'
+});
 
-
-
-var publicPath = '/';
-var publicUrl = '';
-var env = getClientEnvironment(publicUrl);
-const cssFilename = 'bundle.css';
+const publicPath = '/';
+const publicUrl = '';
+const env = getClientEnvironment(publicUrl);
+const cssFilename = 'static/css/bundle.css';
 
 module.exports = {
   devtool: 'cheap-module-source-map',
@@ -54,5 +60,6 @@ module.exports = {
     }),
     new ExtractTextPlugin(cssFilename),
     new webpack.DefinePlugin(env.stringified),
+    assetsPlugin,
   ],
 };

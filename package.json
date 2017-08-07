@@ -4,13 +4,15 @@
   "description": "",
   "main": "scripts.js",
   "scripts": {
-    "clear": "rm -rf ./dist",
+    "clear-build": "rm -rf ./build",
     "build-app": "NODE_ENV=production $(npm bin)/webpack --config ./config/webpack.config.prod.js",
     "build-sw": "NODE_ENV=production $(npm bin)/webpack --config ./config/webpack.sw.config.js",
     "bump-version": "npm version patch",
     "prepush": "npm run bump-version",
-    "start-dev": "NODE_ENV=development $(npm bin)/webpack --config ./config/webpack.config.dev.js -w",
+    "start-dev": "npm run clear-build && NODE_ENV=development $(npm bin)/webpack --config ./config/webpack.config.dev.js -w",
     "serve": "firebase serve",
+    "deploy-ui": "npm run clear-build && npm run build-app && npm run build-sw && firebase deploy --only hosting",
+    "deploy-all": "npm run clear-build && npm run build-app && npm run build-sw && firebase deploy",
     "test": "node scripts/test.js --env=jsdom"
   },
   "dependencies": {

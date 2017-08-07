@@ -66,18 +66,25 @@ const router = new workbox.routing.Router();
 
 const staticFilesRoute = new workbox.routing.RegExpRoute({
   regExp: /^((?!api).)*$/,
-  handler: ({ event }) => caches.match(event.request).catch(() => fetch(event.request)),
+  handler: ({ event }) => {
+    //it should be html request if not inside static folder
+    const assetsRe = /^.*\/static\/.*$/gi;
+    if (assetsRe.test(event.request.url))
+      return caches.match(event.request).catch(() => fetch(event.request))
+    const htmlRequest = new Request('/');
+    return caches.match(htmlRequest).catch(() => fetch(event.request))
+  },
 });
 
 const dataRoutes = new workbox.routing.RegExpRoute({
   regExp: /api\/(\w+)/,
   handler: ({ event, params }) => fetch(event.request)
-  .then(response => {
-    if (response.ok)
-      return response;
-    throw new Error('something bad happened, let the catch do its work');
-  })
-  .catch(() => handlers[params[0]](event.request)),
+    .then(response => {
+      if (response.ok)
+        return response;
+      throw new Error('something bad happened, let the catch do its work');
+    })
+    .catch(() => handlers[params[0]](event.request)),
 });
 
 router.registerRoutes({
